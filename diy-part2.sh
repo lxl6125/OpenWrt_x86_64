@@ -14,14 +14,12 @@
 sed -i 's/luci-theme-bootstrap/luci-theme-argon-mod/g' feeds/luci/collections/luci/Makefile
 
 # Add kernel build user
-[ -z $(grep "CONFIG_KERNEL_BUILD_USER=" .config) ] &&
-    echo 'CONFIG_KERNEL_BUILD_USER="lxl6125"' >>.config ||
-    sed -i 's@\(CONFIG_KERNEL_BUILD_USER=\).*@\1$"lxl6125"@' .config
+sed -i '/CONFIG_KERNEL_BUILD_USER/d' .config &&
+    echo 'CONFIG_KERNEL_BUILD_USER="lxl6125"' >>.config
 
 # Add kernel build domain
-[ -z $(grep "CONFIG_KERNEL_BUILD_DOMAIN=" .config) ] &&
-    echo 'CONFIG_KERNEL_BUILD_DOMAIN="GitHub Actions"' >>.config ||
-    sed -i 's@\(CONFIG_KERNEL_BUILD_DOMAIN=\).*@\1$"GitHub Actions"@' .config
+sed -i '/CONFIG_KERNEL_BUILD_DOMAIN/d' .config &&
+    echo 'CONFIG_KERNEL_BUILD_DOMAIN="GitHub Actions"' >>.config
 
 # Add PassWall
 git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall package/custom/passwall
@@ -36,6 +34,9 @@ git clone --depth=1 https://github.com/UnblockNeteaseMusic/luci-app-unblocknetea
 # Replace luci-app-dockerman
 rm -rf feeds/luci/applications/luci-app-dockerman
 git clone --depth=1 https://github.com/lxl6125/luci-app-dockerman feeds/luci/applications/luci-app-dockerman
+
+# Add luci-app-argon-config
+git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config package/custom/luci-app-argon-config
 
 # Preset clash core
 $GITHUB_WORKSPACE/preset-clash-core.sh amd64
